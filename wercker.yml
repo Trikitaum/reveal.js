@@ -7,18 +7,18 @@ build:
         code: docker login -e="." -u="cgonzalezg+wercker" -p="58AACU24UWMNIRI226IF1250VWWPCUST15AW8FGUSVRW10LY43PR5WDBK08U03OZ" quay.io
     - script:
         name: construir la imagen y ejecutar los test
-        code: docker build -t quay.io/company/presentacion .
+        code: docker build -t quay.io/cgonzalezg/presentacion .
     - script:
         name: test container
         code: |
-          docker run -d -p 8000:8000 quay.io/company/presentacion
+          docker run -d -p 8000:8000 quay.io/cgonzalezg/presentacion
           sleep 15
           curl --retry 10 --retry-delay 5 -L -I http://localhost:8000
     - script:
         name: push image
         code: |
-          docker tag quay.io/company/presentacion quay.io/company/presentacion:$WERCKER_GIT_COMMIT
-          docker push quay.io/company/presentacion
+          docker tag quay.io/cgonzalezg/presentacion quay.io/cgonzalezg/presentacion:$WERCKER_GIT_COMMIT
+          docker push quay.io/cgonzalezg/presentacion
 deploy:
   steps:
     - script:
@@ -28,7 +28,7 @@ deploy:
           -X POST \
           -H 'Accept: application/json' \
           -H 'Content-Type: application/json' \
-          -d '{"count":1, "imageUuid":"quay.io/company/presentacion", "name":"presentacion", "networkIds":[], "ports":[], "requestedHostId":"1h1", "startOnCreate":true, "commandArgs":[], "publishAllPorts":false, "privileged":false, "capAdd":[], "capDrop":[], "dns":[], "dnsSearch":[], "instanceLinks":{"mongo_1":18}, "stdinOpen":false, "tty":false, "entryPoint":[], "restartPolicy":null, "devices":[], "dataVolumes":[], "dataVolumesFrom":[]}' \
+          -d '{"count":1, "imageUuid":"quay.io/cgonzalezg/presentacion", "name":"presentacion", "networkIds":[], "ports":[], "requestedHostId":"1h1", "startOnCreate":true, "commandArgs":[], "publishAllPorts":false, "privileged":false, "capAdd":[], "capDrop":[], "dns":[], "dnsSearch":[], "instanceLinks":{"mongo_1":18}, "stdinOpen":false, "tty":false, "entryPoint":[], "restartPolicy":null, "devices":[], "dataVolumes":[], "dataVolumesFrom":[]}' \
           'http://$PROD_SERVER/v1/containers'
     - script:
         name: desplegar la nueva version en nodo 3
@@ -37,7 +37,7 @@ deploy:
           -X POST \
           -H 'Accept: application/json' \
           -H 'Content-Type: application/json' \
-          -d '{"count":1, "imageUuid":"quay.io/company/presentacion", "name":"presentacion", "networkIds":[], "ports":[], "requestedHostId":"1h3", "startOnCreate":true, "commandArgs":[], "publishAllPorts":false, "privileged":false, "capAdd":[], "capDrop":[], "dns":[], "dnsSearch":[], "instanceLinks":{"mongo_3":17}, "stdinOpen":false, "tty":false, "entryPoint":[], "restartPolicy":null, "devices":[], "dataVolumes":[], "dataVolumesFrom":[]}' \
+          -d '{"count":1, "imageUuid":"quay.io/cgonzalezg/presentacion", "name":"presentacion", "networkIds":[], "ports":[], "requestedHostId":"1h3", "startOnCreate":true, "commandArgs":[], "publishAllPorts":false, "privileged":false, "capAdd":[], "capDrop":[], "dns":[], "dnsSearch":[], "instanceLinks":{"mongo_3":17}, "stdinOpen":false, "tty":false, "entryPoint":[], "restartPolicy":null, "devices":[], "dataVolumes":[], "dataVolumesFrom":[]}' \
           'http://$PROD_SERVER/v1/containers'
     - script:
         name: instalacion de herramientas json
